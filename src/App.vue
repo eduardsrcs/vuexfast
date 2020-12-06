@@ -1,18 +1,31 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <PostForm />
+    <hr>
+    <p v-if="!allPosts">No posts.</p>
+    <div v-else>
+      <h1>Posts: {{postsCount}}</h1>
+      <div class="post" v-for="post in validPosts" :key="post.id">
+        <h2>{{post.title}}</h2>
+        <p>{{post.body}}</p>
+      </div>
+
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {mapGetters, mapActions} from 'vuex'
+import PostForm from './components/PostForm'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  computed: mapGetters(['allPosts', 'postsCount', 'validPosts']),
+  async mounted() {
+    this.fetchPosts(4)
+  },
+  methods: mapActions(['fetchPosts']),
+  components: {PostForm}
 }
 </script>
 
@@ -23,6 +36,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 60px auto;
+  width: 400px;;
+}
+
+.post{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 1rem;
 }
 </style>
